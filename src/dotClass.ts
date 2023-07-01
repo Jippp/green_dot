@@ -5,6 +5,27 @@ interface DrawProps {
   color?: string
 }
 
+export const DEFAULTCONFIG = {
+  /** 起始x轴坐标 */
+  x: 10,
+  /** 起始y轴坐标 */
+  y: 10,
+  /** 尺寸大小 */
+  size: 20,
+  /** width */
+  width: 20,
+  /** height */
+  height: 20,
+  /** 圆角 */
+  cornerRadius: 2,
+  /** 间距 */
+  gap: 10,
+  /** 一列固定7天 */
+  row: 7,
+  /** 选中的颜色 */
+  activeColor: 'green'
+}
+
 class DotItemClass {
   x?: number;
   y?: number;
@@ -15,7 +36,13 @@ class DotItemClass {
   gap?: number;
   
   constructor({
-    x = 10, y = 10, size = 50, width = 50, height = 50, cornerRadius = 10, gap = 10
+    x = DEFAULTCONFIG.x, 
+    y = DEFAULTCONFIG.y, 
+    size = DEFAULTCONFIG.size, 
+    width = DEFAULTCONFIG.width, 
+    height = DEFAULTCONFIG.height, 
+    cornerRadius = DEFAULTCONFIG.cornerRadius, 
+    gap = DEFAULTCONFIG.gap
   }: DotItemClass) {
     this.size = size
     this.width = width
@@ -49,7 +76,7 @@ class DotItemClass {
 
     ctx.strokeStyle = '#ccc'
     ctx.stroke()
-    ctx.fillStyle = color; // 填充颜色为红色
+    ctx.fillStyle = color; // 填充颜色
     ctx.fill(); // 填充方块
   }
 }
