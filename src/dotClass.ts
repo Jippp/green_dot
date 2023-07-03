@@ -1,5 +1,6 @@
 interface DrawProps {
-  ctx: CanvasRenderingContext2D,
+  // ctx: CanvasRenderingContext2D,
+  ctx: any,
   x: number, 
   y: number,
   color?: string

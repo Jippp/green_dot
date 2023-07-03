@@ -1,16 +1,17 @@
 {
   "name": "green_dot",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "./src/index.js",
+  "version": "0.1.1",
+  "main": "./src/index.ts",
   "repository": "git@github.com:Jippp/green_dot.git",
   "author": "JX_ppp",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node index.ts",
+    "dev": "ts-node src/index.ts",
     "build": "tsc --watch"
   },
   "dependencies": {
+    "@types/node": "^20.3.3",
+    "canvas": "^2.11.2",
     "dayjs": "^1.11.8",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

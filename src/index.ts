@@ -1,5 +1,8 @@
-import DotItemClass, { DEFAULTCONFIG } from './dotClass.js'
-import mock from './format.js'
+import { createCanvas } from 'canvas'
+import dayjs from 'dayjs'
+import fs from 'fs'
+import DotItemClass, { DEFAULTCONFIG } from './dotClass'
+import mock from './format'
 
 /**
  * 获取第一天的y轴偏移量
@@ -7,12 +10,7 @@ import mock from './format.js'
  */
 const getFirstDayY = (firstDay: string) => {
   // 0-6, 周日到周六
-  // @ts-ignore
   return dayjs(firstDay).day()
-  // return {
-  //   y: DEFAULTCONFIG.y + day * DEFAULTCONFIG.y + day * height,
-  //   day
-  // }
 }
 
 
@@ -20,13 +18,14 @@ const getFirstDayY = (firstDay: string) => {
  * 固定画布，会自动计算点的大小
  */
 const fixCanvasDraw = () => {
-  const canvas = document.getElementById('canvas') as HTMLCanvasElement
+  const canvas = createCanvas(600, 400)
+  // const canvas = document.getElementById('canvas') as HTMLCanvasElement
   const ctx = canvas.getContext("2d");
   if(ctx) {
     const firstDay = getFirstDayY(mock[0].doneTime)
 
-    const totalWidth = canvas.width
-    const totalHeight = canvas.height
+    const totalWidth = 600
+    const totalHeight = 400
   
     // 行列多少个，一行固定7个，一列多少个
     // 一行col个
@@ -51,27 +50,38 @@ const fixCanvasDraw = () => {
         color: isDone ? DEFAULTCONFIG.activeColor : undefined
       })
     })
-    // ctx.getSerializedSvg()
+    fs.writeFileSync('out.png', canvas.toBuffer())
   }
 }
 
-fixCanvasDraw()
+// fixCanvasDraw()
 
 /**
  * 固定点的大小，自动延伸画布
  */
-const fixDotSizeDraw = () => {
-  const firstDay = getFirstDayY(mock[0].doneTime)
+export const fixDotSizeDraw = ({ data, outFileName, isSvg }: {
+  /** 数据 */
+  data: {
+    isDone: boolean;
+    doneTime: string;
+  }[];
+  /** 导出文件名称，带后缀 */
+  outFileName: string;
+  /** 是否是svg */
+  isSvg?: boolean
+}) => {
+  const firstDay = getFirstDayY(data[0].doneTime)
 
   const canvasHeight = DEFAULTCONFIG.row * DEFAULTCONFIG.height + (DEFAULTCONFIG.row  - 1) * DEFAULTCONFIG.gap  + 2 * DEFAULTCONFIG.y
   /** 列数：day + length */
-  const col = Math.ceil((mock.length + firstDay) / DEFAULTCONFIG.row)
+  const col = Math.ceil((data.length + firstDay) / DEFAULTCONFIG.row)
   /** 画布宽度：列数 * 点width + (列数 - 1) * 间隔 + 2 * x */
   const canvasWidth = col * DEFAULTCONFIG.width + (col  - 1) * DEFAULTCONFIG.gap  + 2 * DEFAULTCONFIG.x
 
-  const canvas = document.getElementById('canvas') as HTMLCanvasElement
-  canvas.width = canvasWidth
-  canvas.height = canvasHeight
+  // const canvas = document.getElementById('canvas') as HTMLCanvasElement
+  // canvas.width = canvasWidth
+  // canvas.height = canvasHeight
+  const canvas = createCanvas(canvasWidth, canvasHeight, isSvg ? 'svg' : undefined)
   const ctx = canvas.getContext("2d");
 
   if(ctx) {
@@ -89,7 +99,9 @@ const fixDotSizeDraw = () => {
         color: isDone ? DEFAULTCONFIG.activeColor : undefined
       })
     })
+
+    fs.writeFileSync(outFileName, canvas.toBuffer())
   }
 }
 
-// fixDotSizeDraw()
+// fixDotSizeDraw({ data: mock, outFileName: 'green.png' })
