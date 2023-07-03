@@ -20,7 +20,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "files": ["./src/index.ts"],
-  "include": ["src"],
+  "include": ["src", "types/index.d.ts"],
   "ts-node": {
     // Tell ts-node CLI to install the --loader automatically, explained below
     "esm": true,
