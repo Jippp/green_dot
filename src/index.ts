@@ -2,7 +2,7 @@ import { createCanvas } from 'canvas'
 import dayjs from 'dayjs'
 import fs from 'fs'
 import DotItemClass, { DEFAULTCONFIG } from './dotClass'
-import mock from './format'
+// import mock from './format'
 
 /**
  * 获取第一天的y轴偏移量
@@ -17,19 +17,28 @@ const getFirstDayY = (firstDay: string) => {
 /**
  * 固定画布，会自动计算点的大小
  */
-const fixCanvasDraw = () => {
-  const canvas = createCanvas(600, 400)
+const fixCanvasDraw = ({ data, outFileName, isSvg }: {
+  /** 数据 */
+  data: {
+    isDone: boolean;
+    doneTime: string;
+  }[];
+  /** 导出文件名称，带后缀 */
+  outFileName: string;
+  /** 是否是svg */
+  isSvg?: boolean
+}) => {
+  const totalWidth = 600
+  const totalHeight = 400
+  const canvas = createCanvas(totalWidth, totalHeight, isSvg ? 'svg' : undefined)
   // const canvas = document.getElementById('canvas') as HTMLCanvasElement
   const ctx = canvas.getContext("2d");
   if(ctx) {
-    const firstDay = getFirstDayY(mock[0].doneTime)
-
-    const totalWidth = 600
-    const totalHeight = 400
+    const firstDay = getFirstDayY(data[0].doneTime)
   
     // 行列多少个，一行固定7个，一列多少个
     // 一行col个
-    const col = Math.ceil((mock.length + firstDay)/ DEFAULTCONFIG.row)
+    const col = Math.ceil((data.length + firstDay)/ DEFAULTCONFIG.row)
     const width = Math.floor((totalWidth - (col - 1) * DEFAULTCONFIG.gap - 2 * DEFAULTCONFIG.x) / col)
     const height = Math.floor((totalHeight - (DEFAULTCONFIG.row - 1) * DEFAULTCONFIG.gap - 2 * DEFAULTCONFIG.y) / DEFAULTCONFIG.row)
     const size = Math.min(width, height)
@@ -38,7 +47,7 @@ const fixCanvasDraw = () => {
       size, width: size, height: size, cornerRadius: ~~(size / 5)
     } as DotItemClass)
   
-    mock.forEach(({ isDone }, idx) => {
+    data.forEach(({ isDone }, idx) => {
       // 计算出该点的位置
       const resIdx = firstDay + idx
       const x = ~~(resIdx / DEFAULTCONFIG.row), y = resIdx % DEFAULTCONFIG.row
@@ -50,11 +59,15 @@ const fixCanvasDraw = () => {
         color: isDone ? DEFAULTCONFIG.activeColor : undefined
       })
     })
-    fs.writeFileSync('out.png', canvas.toBuffer())
+
+    fs.writeFileSync(outFileName, canvas.toBuffer())
+
+    // 清除内存，防止过多占用内存
+    ctx.clearRect(0, 0, totalWidth, totalHeight)
   }
 }
 
-// fixCanvasDraw()
+// fixCanvasDraw({ data: mock, outFileName: 'green_fixcanvas.png' })
 
 /**
  * 固定点的大小，自动延伸画布
@@ -87,7 +100,7 @@ export const fixDotSizeDraw = ({ data, outFileName, isSvg }: {
   if(ctx) {
     const dotItem = new DotItemClass({} as DotItemClass)
   
-    mock.forEach(({ isDone }, idx) => {
+    data.forEach(({ isDone }, idx) => {
       // 计算出该点的位置
       const resIdx = firstDay + idx
       const x = ~~(resIdx / DEFAULTCONFIG.row), y = resIdx % DEFAULTCONFIG.row
@@ -101,6 +114,9 @@ export const fixDotSizeDraw = ({ data, outFileName, isSvg }: {
     })
 
     fs.writeFileSync(outFileName, canvas.toBuffer())
+
+    // 清除内存，防止过多占用内存
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
   }
 }
 
