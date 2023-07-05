@@ -54,6 +54,5 @@
 
 ### MacOS
 
-一直没有安装成功，可能也是相关原因，待重试后补充文档。
-
-https://github.com/Automattic/node-canvas/wiki/Installation:-Mac-OS-X
+https://github.com/Automattic/node-canvas/wiki/Installation%3A-Mac-OS-X#from-source
+这部分从源码安装可以成功
