@@ -72,14 +72,12 @@ const fixCanvasDraw = ({ data, outFileName, isSvg }: {
 /**
  * 固定点的大小，自动延伸画布
  */
-export const fixDotSizeDraw = ({ data, outFileName, isSvg }: {
+export const fixDotSizeDraw = ({ data, isSvg }: {
   /** 数据 */
   data: {
     isDone: boolean;
     doneTime: string;
   }[];
-  /** 导出文件名称，带后缀 */
-  outFileName: string;
   /** 是否是svg */
   isSvg?: boolean
 }) => {
@@ -113,11 +111,14 @@ export const fixDotSizeDraw = ({ data, outFileName, isSvg }: {
       })
     })
 
-    fs.writeFileSync(outFileName, canvas.toBuffer())
+    const buffer = canvas.toBuffer()
 
     // 清除内存，防止过多占用内存
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+
+    return buffer
   }
 }
 
-// fixDotSizeDraw({ data: mock, outFileName: 'green.png' })
+// const fileBuffer = fixDotSizeDraw({ data: mock, outFileName: 'green.png' })
+// if(fileBuffer) fs.writeFileSync('green.png', fileBuffer)
