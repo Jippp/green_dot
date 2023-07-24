@@ -5,11 +5,9 @@ declare module 'green_dot' {
       isDone: boolean;
       doneTime: string;
     }[];
-    /** 导出文件名称，带后缀 */
-    outFileName: string;
     /** 是否是svg */
     isSvg?: boolean
   }
 
-  export function fixDotSizeDraw(arg: DrawProps): void
+  export function fixDotSizeDraw(arg: DrawProps): Buffer | undefined
 }
