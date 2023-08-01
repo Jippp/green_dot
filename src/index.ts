@@ -2,7 +2,7 @@ import { createCanvas } from 'canvas'
 import dayjs from 'dayjs'
 import fs from 'fs'
 import DotItemClass, { DEFAULTCONFIG } from './dotClass'
-// import mock from './format'
+import mock from './format'
 
 /**
  * 获取第一天的y轴偏移量
@@ -97,6 +97,10 @@ export const fixDotSizeDraw = ({ data, isSvg }: {
 
   if(ctx) {
     const dotItem = new DotItemClass({} as DotItemClass)
+
+    // 背景色
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
   
     data.forEach(({ isDone }, idx) => {
       // 计算出该点的位置
@@ -114,11 +118,11 @@ export const fixDotSizeDraw = ({ data, isSvg }: {
     const buffer = canvas.toBuffer()
 
     // 清除内存，防止过多占用内存
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+    if(!isSvg) ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
     return buffer
   }
 }
 
-// const fileBuffer = fixDotSizeDraw({ data: mock, outFileName: 'green.png' })
-// if(fileBuffer) fs.writeFileSync('green.png', fileBuffer)
+const fileBuffer = fixDotSizeDraw({ data: mock })
+if(fileBuffer) fs.writeFileSync('green.png', fileBuffer)

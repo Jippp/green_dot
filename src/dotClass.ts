@@ -18,7 +18,7 @@ export const DEFAULTCONFIG = {
   /** height */
   height: 20,
   /** 圆角 */
-  cornerRadius: 2,
+  cornerRadius: 5,
   /** 间距 */
   gap: 10,
   /** 一列固定7天 */
@@ -56,7 +56,7 @@ class DotItemClass {
 
   // 绘制单独的一个点
   drawDotItem({
-    ctx, x, y, color = '#fff'
+    ctx, x, y, color = '#ccc'
   }: DrawProps) {
     const width = this.width!
     const height = this.height!
@@ -75,7 +75,7 @@ class DotItemClass {
     ctx.arcTo(x, y, x + cornerRadius, y, cornerRadius);
     ctx.closePath()
 
-    ctx.strokeStyle = '#ccc'
+    ctx.strokeStyle = color
     ctx.stroke()
     ctx.fillStyle = color; // 填充颜色
     ctx.fill(); // 填充方块
